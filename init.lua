@@ -277,6 +277,18 @@ require('lazy').setup({
     },
   },
 
+  {
+    'numToStr/FTerm.nvim',
+    config = function()
+      require('FTerm').setup {
+        border = 'rounded', -- Border style for the floating window
+        dimensions = {
+          height = 0.8, -- Height as a percentage of the editor height
+          width = 0.8, -- Width as a percentage of the editor width
+        },
+      }
+    end,
+  },
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -1034,6 +1046,40 @@ require('lazy').setup({
     },
   },
 })
+
+-- Open Neo-tree instead of the default directory view
+vim.api.nvim_create_autocmd('VimEnter', {
+  callback = function(data)
+    -- Check if the opened file is a directory
+    local directory = vim.fn.isdirectory(data.file) == 1
+
+    if directory then
+      -- Change to the directory
+      vim.cmd.cd(data.file)
+      -- Open Neo-tree
+      require('neo-tree.command').execute { toggle = true, dir = vim.loop.cwd() }
+      -- Prevent Neovim from opening the directory itself
+      return true
+    end
+  end,
+})
+
+-- Toggle Terminal
+
+local fterm = require 'FTerm'
+
+-- Keybindings to toggle the terminal
+vim.keymap.set('n', '<C-`>', fterm.toggle, { desc = 'Toggle FTerm (Normal mode)' })
+vim.keymap.set('t', '<C-`>', fterm.toggle, { desc = 'Toggle FTerm (Terminal mode)' })
+
+-- Optionally, bind a key to open a Git client (e.g., lazygit) in the terminal
+vim.keymap.set('n', '<leader>g', function()
+  fterm
+    :new({
+      cmd = 'lazygit', -- Replace with the Git client you use
+    })
+    :toggle()
+end, { desc = 'Open LazyGit in FTerm' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
