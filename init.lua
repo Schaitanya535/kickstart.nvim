@@ -88,7 +88,7 @@ P.S. You can delete this when you're done too. It's your config now! :)
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
+--
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
@@ -113,11 +113,13 @@ vim.opt.showmode = false
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
+
 vim.schedule(function()
   vim.opt.clipboard = 'unnamedplus'
 end)
 
 -- Enable break indent
+--
 vim.opt.breakindent = true
 
 -- Save undo history
@@ -291,6 +293,13 @@ require('lazy').setup({
           width = 0.8, -- Width as a percentage of the editor width
         },
       }
+    end,
+  },
+
+  {
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup()
     end,
   },
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
@@ -935,7 +944,7 @@ require('lazy').setup({
     end,
   },
 
-  --Todo: comment
+  -- TODO: comment
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -1068,8 +1077,21 @@ vim.api.nvim_create_autocmd('VimEnter', {
   end,
 })
 
--- Toggle Terminal
+-- Toggle Comments
+-- For normal mode: Toggle comment for the current line
+vim.keymap.set('n', '<C-/>', function()
+  require('Comment.api').toggle.linewise.current()
+end, { desc = 'Toggle comment (linewise)' })
 
+-- For visual mode: Toggle comment for the selected lines
+--
+vim.keymap.set('x', '<C-/>', function()
+  local esc = vim.api.nvim_replace_termcodes('<ESC>', true, false, true)
+  vim.api.nvim_feedkeys(esc, 'nx', false)
+  require('Comment.api').toggle.blockwise(vim.fn.visualmode())
+end, { desc = 'toggle comment (blockwise)' })
+
+-- Toggle Terminal
 local fterm = require 'FTerm'
 
 -- Keybindings to toggle the terminal
