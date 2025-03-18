@@ -8,10 +8,11 @@ return {
         numbers = 'ordinal', -- Show buffer numbers
         diagnostics = 'nvim_lsp', -- Show LSP diagnostics in the bufferline
         separator_style = 'slant', -- Aesthetic separator style
-        show_buffer_close_icons = false,
-        show_close_icon = false,
+        show_buffer_close_icons = true,
+        show_close_icon = true,
+        show_tab_indicators = true,
         offsets = {
-          { filetype = 'NvimTree', text = 'File Explorer', text_align = 'center' },
+          { filetype = 'neo-tree', text = 'File Explorer', text_align = 'left', seperator = true },
         },
       },
     }
