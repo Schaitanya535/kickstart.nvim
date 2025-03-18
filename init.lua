@@ -157,6 +157,10 @@ vim.opt.scrolloff = 15
 
 vim.cmd 'set scroll=10'
 
+-- Don't load Netrw or its plugins.
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
