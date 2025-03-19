@@ -203,12 +203,6 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
-vim.keymap.set('n', '<C-`>', function()
-  vim.cmd 'split | terminal'
-  vim.cmd 'resize 15'
-  vim.cmd 'startinsert'
-end)
-
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -283,19 +277,6 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
     },
-  },
-
-  {
-    'numToStr/FTerm.nvim',
-    config = function()
-      require('FTerm').setup {
-        border = 'rounded', -- Border style for the floating window
-        dimensions = {
-          height = 0.8, -- Height as a percentage of the editor height
-          width = 0.8, -- Width as a percentage of the editor width
-        },
-      }
-    end,
   },
 
   {
@@ -993,12 +974,14 @@ require('lazy').setup({
   require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
   require 'custom.plugins.init',
+  require 'custom.plugins.comments',
   require 'custom.plugins.buffers',
   require 'custom.plugins.flash-motions',
   require 'custom.plugins.nvim-surround',
   require 'custom.plugins.noice',
   require 'custom.plugins.lua-line',
   require 'custom.plugins.completions',
+  require 'custom.plugins.terminal',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -1072,36 +1055,6 @@ vim.api.nvim_create_autocmd('VimEnter', {
     end
   end,
 })
-
--- Toggle Comments
--- For normal mode: Toggle comment for the current line
-vim.keymap.set('n', '<C-/>', function()
-  require('Comment.api').toggle.linewise.current()
-end, { desc = 'Toggle comment (linewise)' })
-
--- For visual mode: Toggle comment for the selected lines
---
-vim.keymap.set('x', '<C-/>', function()
-  local esc = vim.api.nvim_replace_termcodes('<ESC>', true, false, true)
-  vim.api.nvim_feedkeys(esc, 'nx', false)
-  require('Comment.api').toggle.blockwise(vim.fn.visualmode())
-end, { desc = 'toggle comment (blockwise)' })
-
--- Toggle Terminal
-local fterm = require 'FTerm'
-
--- Keybindings to toggle the terminal
-vim.keymap.set('n', '<C-`>', fterm.toggle, { desc = 'Toggle FTerm (Normal mode)' })
-vim.keymap.set('t', '<C-`>', fterm.toggle, { desc = 'Toggle FTerm (Terminal mode)' })
-
--- Optionally, bind a key to open a Git client (e.g., lazygit) in the terminal
-vim.keymap.set('n', '<leader>g', function()
-  fterm
-    :new({
-      cmd = 'lazygit', -- Replace with the Git client you use
-    })
-    :toggle()
-end, { desc = 'Open LazyGit in FTerm' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
