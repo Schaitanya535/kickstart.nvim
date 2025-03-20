@@ -413,12 +413,38 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        --
+        --[[ defaults = {
+
+          mappings = {
+            i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+
+            ['<C-j>'] = {
+              require('telescope').actions.move_selection_next,
+              type = 'action',
+              opts = { nowait = true, silent = true },
+            },
+
+            ['<C-k>'] = {
+              require('telescope').actions.move_selection_previous,
+              type = 'action',
+              opts = { nowait = true, silent = true },
+            },
+          },
+        }, ]]
         -- pickers = {}
+        mappings = {
+          i = {
+            ['<esc>'] = require('telescope.actions').close,
+            ['<C-j>'] = require('telescope.actions').move_selection_next,
+            ['<C-k>'] = require('telescope.actions').move_selection_previous,
+          },
+          n = {
+            ['<esc>'] = require('telescope.actions').close,
+            ['<C-j>'] = require('telescope.actions').move_selection_next,
+            ['<C-k>'] = require('telescope.actions').move_selection_previous,
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -759,7 +785,7 @@ require('lazy').setup({
       },
     },
     opts = {
-      notify_on_error = false,
+      notify_on_error = true,
       format_on_save = function(bufnr)
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
@@ -975,6 +1001,7 @@ require('lazy').setup({
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
   require 'custom.plugins.init',
   require 'custom.plugins.sessions',
+  require 'custom.plugins.editor-support',
   require 'custom.plugins.comments',
   require 'custom.plugins.buffers',
   require 'custom.plugins.flash-motions',
@@ -1056,6 +1083,6 @@ vim.api.nvim_create_autocmd('VimEnter', {
     end
   end,
 })
-
+-- Just trying to write lines
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
