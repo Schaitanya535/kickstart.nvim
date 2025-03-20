@@ -1000,6 +1000,7 @@ require('lazy').setup({
   require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
   require 'custom.plugins.init',
+  require 'custom.plugins.obsidian',
   require 'custom.plugins.sessions',
   require 'custom.plugins.editor-support',
   require 'custom.plugins.comments',
@@ -1060,6 +1061,11 @@ vim.keymap.set('n', '<leader>bl', '<cmd>BufferLineMoveNext<CR>', { desc = 'Move 
 vim.keymap.set('n', '<leader>bh', '<cmd>BufferLineMovePrev<CR>', { desc = 'Move buffer left' })
 
 -- Toggle folds using treesitter
+
+-- Adding keymaps for LSP actions
+--
+
+vim.keymap.set('n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>', { desc = 'Code action' })
 
 vim.opt.foldmethod = 'expr' -- Use 'expr' for Treesitter-based folds or other expressions
 vim.opt.foldexpr = 'nvim_treesitter#foldexpr()' -- Treesitter folding expression
