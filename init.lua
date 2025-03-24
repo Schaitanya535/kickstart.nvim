@@ -1024,6 +1024,7 @@ require('lazy').setup({
   require 'custom.plugins.lua-line',
   require 'custom.plugins.completions',
   require 'custom.plugins.terminal',
+  require 'custom.plugins.vim-test',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -1061,7 +1062,7 @@ require('lazy').setup({
 vim.keymap.set('n', '<Tab>', '<cmd>BufferLineCycleNext<CR>', { desc = 'Next buffer' })
 
 -- Move to the previous buffer
-vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR> <cmd>BufferLineCyclePrev<CR>', { desc = 'Previous buffer' })
+vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR>', { desc = 'Previous buffer' })
 
 -- Close the current buffer
 vim.keymap.set('n', '<leader>bc', '<cmd>bdelete<CR>', { desc = 'Close buffer' })
