@@ -168,6 +168,8 @@ vim.g.loaded_netrwPlugin = 1
 -- See `:help 'confirm'`
 vim.opt.confirm = true
 
+vim.opt.termguicolors = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -948,8 +950,8 @@ require('lazy').setup({
 
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      -- any other, such as 'tokyonight-moon', 'tokyonight-night', or 'tokyonight-day'.
+      vim.cmd.colorscheme 'tokyonight-storm'
     end,
   },
 
@@ -963,7 +965,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'sscript' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -975,6 +977,17 @@ require('lazy').setup({
       },
       indent = { enable = true, disable = { 'ruby' } },
     },
+    config = function()
+      local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
+      parser_config.sscript = {
+        install_info = {
+          url = '~/Projects/tree-sitter-sscript/', -- Replace with the path to your grammar files
+          files = { 'src/parser.c' }, -- Adjust based on your grammar files
+        },
+        filetype = 'sscript', -- Set the filetype associated with your grammar
+      }
+    end,
+    -- Add parser for your custom language
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
     --
@@ -1000,7 +1013,7 @@ require('lazy').setup({
   require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
   require 'custom.plugins.init',
-  require 'custom.plugins.obsidian',
+  require 'custom.plugins.tmux',
   require 'custom.plugins.sessions',
   require 'custom.plugins.editor-support',
   require 'custom.plugins.comments',
@@ -1048,7 +1061,7 @@ require('lazy').setup({
 vim.keymap.set('n', '<Tab>', '<cmd>BufferLineCycleNext<CR>', { desc = 'Next buffer' })
 
 -- Move to the previous buffer
-vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR>', { desc = 'Previous buffer' })
+vim.keymap.set('n', '<S-Tab>', '<cmd>BufferLineCyclePrev<CR> <cmd>BufferLineCyclePrev<CR>', { desc = 'Previous buffer' })
 
 -- Close the current buffer
 vim.keymap.set('n', '<leader>bc', '<cmd>bdelete<CR>', { desc = 'Close buffer' })
