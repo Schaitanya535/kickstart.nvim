@@ -10,8 +10,6 @@ vim.filetype.add {
   },
 }
 
--- -- strating treesitter
-
 -- starting lsp
 local client = vim.lsp.start_client {
   cmd = { '/Users/chaitanyasura/Projects/RustServer/target/debug/rust_server' },
@@ -31,6 +29,4 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
-return {
-
-}
+return {}

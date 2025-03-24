@@ -976,6 +976,23 @@ require('lazy').setup({
       indent = { enable = true, disable = { 'ruby' } },
     },
     config = function()
+      vim.filetype.add {
+        extension = {
+          sscript = 'sscript',
+        },
+      }
+
+      -- -- strating treesitter
+      local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
+      parser_config.sscript = {
+        install_info = {
+          url = '~/Projects/tree-sitter-sscript',
+          files = { 'src/parser.c' },
+        },
+        fileType = 'sscript',
+        used_by = { 'sscript' },
+      }
+
       local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
       parser_config.sscript = {
         install_info = {
