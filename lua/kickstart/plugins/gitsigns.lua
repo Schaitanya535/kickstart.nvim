@@ -48,6 +48,7 @@ return {
         map('n', '<leader>HR', gitsigns.reset_buffer, { desc = 'git [R]eset buffer' })
         map('n', '<leader>Hp', gitsigns.preview_hunk, { desc = 'git [p]review hunk' })
         map('n', '<leader>Hb', gitsigns.blame_line, { desc = 'git [b]lame line' })
+        map('n', '<leader>Ht', gitsigns.toggle_current_line_blame, { desc = 'git [b]lame line' })
         map('n', '<leader>Hd', gitsigns.diffthis, { desc = 'git [d]iff against index' })
         map('n', '<leader>HD', function()
           gitsigns.diffthis '@'

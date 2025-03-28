@@ -46,5 +46,8 @@ return {
     vim.keymap.set('n', '<leader>4', function()
       require('harpoon.ui').nav_file(4)
     end, { desc = 'Go to file 4' })
+    vim.keymap.set('n', '<leader>5', function()
+      require('harpoon.ui').nav_file(5)
+    end, { desc = 'Go to file 5' })
   end,
 }
