@@ -13,4 +13,17 @@ return {
     --   If not available, we use `mini` as the fallback
     'rcarriga/nvim-notify',
   },
+
+  --setting up recording as notification
+  config = function()
+    local noice = require 'noice'
+    noice.setup {
+      routes = {
+        {
+          view = 'notify',
+          filter = { event = 'msg_showmode' },
+        },
+      },
+    }
+  end,
 }
