@@ -9,3 +9,17 @@
 (action) @keyword
 
 (transition) @type
+
+(paragraph) @keyword
+
+(location_title) @type
+
+(character_title) @type
+
+(lore_title) @type
+
+(chapter_title) @type
+
+(end_section) @type
+
+
