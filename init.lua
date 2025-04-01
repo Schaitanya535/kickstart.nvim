@@ -953,6 +953,8 @@ require('lazy').setup({
     end,
   },
 
+  { 'catppuccin/nvim', name = 'catppuccin', priority = 1001 },
+
   -- TODO: comment
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
