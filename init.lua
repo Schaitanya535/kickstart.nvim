@@ -1030,6 +1030,7 @@ require('lazy').setup({
   require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
   require 'custom.plugins.init',
+  require 'custom.plugins.vim-be-good',
   require 'custom.plugins.tmux',
   require 'custom.plugins.sessions',
   require 'custom.plugins.harpoon',

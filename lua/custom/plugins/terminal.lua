@@ -10,6 +10,13 @@ return {
         -- Keybindings to toggle the terminal
         vim.keymap.set('n', '<C-Space>', fterm.toggle, { desc = 'Toggle FTerm (Normal mode)' }),
         vim.keymap.set('t', '<C-Space>', fterm.toggle, { desc = 'Toggle FTerm (Terminal mode)' }),
+        vim.keymap.set('n', '<leader>y', function()
+          fterm
+            :new({
+              cmd = 'yazi', -- Replace with the Git client you use
+            })
+            :toggle()
+        end, { desc = 'Open yazi in FTerm' }),
         vim.keymap.set('n', '<leader>g', function()
           fterm
             :new({
