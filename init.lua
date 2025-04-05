@@ -217,6 +217,11 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+vim.api.nvim_create_autocmd('CursorHold', {
+  callback = function()
+    vim.diagnostic.open_float(nil, { focus = false })
+  end,
+})
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -656,6 +661,25 @@ require('lazy').setup({
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
             end, '[T]oggle Inlay [H]ints')
           end
+
+          -- Stop ts_ls if .deno folder is found
+          if client and client.name == 'ts_ls' then
+            local root_dir = vim.lsp.get_client_by_id(event.data.client_id).config.root_dir
+            if vim.loop.fs_stat(root_dir .. '/.deno') then
+              vim.lsp.stop_client { event.data.client_id }
+              vim.notify('Stopped ts_ls, .deno folder found', vim.log.levels.WARN)
+            end
+          end
+
+          -- stop deno server if .deno folder is not found
+
+          if client and client.name == 'denols' then
+            local root_dir = vim.lsp.get_client_by_id(event.data.client_id).config.root_dir
+            if not (vim.loop.fs_stat(root_dir .. '/.deno')) then
+              vim.lsp.stop_client { event.data.client_id }
+              vim.notify('Stopped denols, no .deno folder found', vim.log.levels.WARN)
+            end
+          end
         end,
       })
 
@@ -1030,6 +1054,7 @@ require('lazy').setup({
   require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
   require 'custom.plugins.init',
+  -- require 'custom.plugins.oil',
   require 'custom.plugins.vim-be-good',
   require 'custom.plugins.tmux',
   require 'custom.plugins.sessions',
