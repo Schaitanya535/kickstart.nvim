@@ -667,7 +667,6 @@ require('lazy').setup({
             local root_dir = vim.lsp.get_client_by_id(event.data.client_id).config.root_dir
             if vim.loop.fs_stat(root_dir .. '/.deno') then
               vim.lsp.stop_client { event.data.client_id }
-              vim.notify('Stopped ts_ls, .deno folder found', vim.log.levels.WARN)
             end
           end
 
@@ -677,7 +676,6 @@ require('lazy').setup({
             local root_dir = vim.lsp.get_client_by_id(event.data.client_id).config.root_dir
             if not (vim.loop.fs_stat(root_dir .. '/.deno')) then
               vim.lsp.stop_client { event.data.client_id }
-              vim.notify('Stopped denols, no .deno folder found', vim.log.levels.WARN)
             end
           end
         end,
