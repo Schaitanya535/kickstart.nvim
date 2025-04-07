@@ -17,6 +17,7 @@ return {
   --setting up recording as notification
   config = function()
     local noice = require 'noice'
+    require('telescope').load_extension 'noice'
     noice.setup {
       routes = {
         {

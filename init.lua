@@ -1131,21 +1131,21 @@ vim.opt.foldlevel = 99 -- Open most folds by default (set to 0 to close all fold
 vim.opt.foldlevelstart = 99 -- Start with all folds open
 
 -- Open Neo-tree instead of the default directory view
-vim.api.nvim_create_autocmd('VimEnter', {
-  callback = function(data)
-    -- Check if the opened file is a directory
-    local directory = vim.fn.isdirectory(data.file) == 1
-
-    if directory then
-      -- Change to the directory
-      vim.cmd.cd(data.file)
-      -- Open Neo-tree
-      require('neo-tree.command').execute { toggle = true, dir = vim.loop.cwd() }
-      -- Prevent Neovim from opening the directory itself
-      return true
-    end
-  end,
-})
+-- vim.api.nvim_create_autocmd('VimEnter', {
+--   callback = function(data)
+--     -- Check if the opened file is a directory
+--     local directory = vim.fn.isdirectory(data.file) == 1
+--
+--     if directory then
+--       -- Change to the directory
+--       vim.cmd.cd(data.file)
+--       -- Open Neo-tree
+--       require('neo-tree.command').execute { toggle = true, dir = vim.loop.cwd() }
+--       -- Prevent Neovim from opening the directory itself
+--       return true
+--     end
+--   end,
+-- })
 -- Just trying to write lines
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
