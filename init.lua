@@ -986,23 +986,28 @@ require('lazy').setup({
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'sscript' },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
-    },
+
     config = function()
       vim.filetype.add {
         extension = {
           sscript = 'sscript',
+        },
+      }
+
+      require('nvim-treesitter.configs').setup {
+        -- Add languages to be installed here that you want installed for treesitter
+        ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'sscript' },
+
+        -- Autoinstall languages that are not installed.
+        auto_install = true,
+
+        highlight = {
+          enable = true,
+          additional_vim_regex_highlighting = { 'ruby' },
+        },
+        indent = {
+          enable = true,
+          disable = { 'ruby' },
         },
       }
 
@@ -1017,14 +1022,14 @@ require('lazy').setup({
         used_by = { 'sscript' },
       }
 
-      local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
-      parser_config.sscript = {
-        install_info = {
-          url = '~/Projects/tree-sitter-sscript/', -- Replace with the path to your grammar files
-          files = { 'src/parser.c' }, -- Adjust based on your grammar files
-        },
-        filetype = 'sscript', -- Set the filetype associated with your grammar
-      }
+      -- local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
+      -- parser_config.sscript = {
+      --   install_info = {
+      --     url = '~/Projects/tree-sitter-sscript/', -- Replace with the path to your grammar files
+      --     files = { 'src/parser.c' }, -- Adjust based on your grammar files
+      --   },
+      --   filetype = 'sscript', -- Set the filetype associated with your grammar
+      -- }
     end,
     -- Add parser for your custom language
     -- There are additional nvim-treesitter modules that you can use to interact
