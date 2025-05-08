@@ -11,6 +11,7 @@ return {
       provider = 'copilot',
       copilot = {
         endpoint = 'https://api.githubcopilot.com',
+        -- some of the available options 'gpt-4o', 'claude-3.7-sonnet', 'claude-3.5-sonnet'
         model = 'claude-3.7-sonnet',
         proxy = nil, -- [protocol://]host[:port] Use this proxy
         allow_insecure = false, -- Allow insecure server connections
