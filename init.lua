@@ -744,7 +744,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        ts_ls = {},
         --
 
         lua_ls = {
@@ -1065,6 +1065,7 @@ require('lazy').setup({
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
   require 'custom.plugins.init',
   require 'custom.plugins.yazi',
+  require 'custom.plugins.obsidian',
   -- require 'custom.plugins.oil',
   require 'custom.plugins.vim-be-good',
   require 'custom.plugins.tmux',
@@ -1078,6 +1079,8 @@ require('lazy').setup({
   require 'custom.plugins.noice',
   require 'custom.plugins.lua-line',
   require 'custom.plugins.completions',
+  require 'custom.plugins.auto-tag',
+  require 'custom.plugins.mcphub',
   require 'custom.plugins.terminal',
   require 'custom.plugins.vim-test',
 
