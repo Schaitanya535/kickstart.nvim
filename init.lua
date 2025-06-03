@@ -1063,32 +1063,12 @@ require('lazy').setup({
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
-  require 'custom.plugins.init',
-  require 'custom.plugins.yazi',
-  require 'custom.plugins.obsidian',
-  -- require 'custom.plugins.oil',
-  require 'custom.plugins.vim-be-good',
-  require 'custom.plugins.tmux',
-  require 'custom.plugins.sessions',
-  require 'custom.plugins.harpoon',
-  require 'custom.plugins.editor-support',
-  require 'custom.plugins.comments',
-  require 'custom.plugins.buffers',
-  require 'custom.plugins.flash-motions',
-  require 'custom.plugins.nvim-surround',
-  require 'custom.plugins.noice',
-  require 'custom.plugins.lua-line',
-  require 'custom.plugins.completions',
-  require 'custom.plugins.auto-tag',
-  require 'custom.plugins.mcphub',
-  require 'custom.plugins.terminal',
-  require 'custom.plugins.vim-test',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
@@ -1115,6 +1095,10 @@ require('lazy').setup({
     },
   },
 })
+
+-- Keymaps for shift in visual mode
+vim.keymap.set('v', '<Tab>', '>gv', { desc = 'Indent selected lines' })
+vim.keymap.set('v', '<S-Tab>', '<gv', { desc = 'Unindent selected lines' })
 
 -- Buffer Keymaps
 vim.keymap.set('n', '<Tab>', '<cmd>BufferLineCycleNext<CR>', { desc = 'Next buffer' })
