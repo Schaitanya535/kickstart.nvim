@@ -9,36 +9,38 @@ return {
       -- add any opts here
       -- for example
       provider = 'copilot',
-      copilot = {
-        endpoint = 'https://api.githubcopilot.com',
-        -- some of the available options 'gpt-4o', 'claude-3.7-sonnet', 'gpt-4.1'
-        model = 'claude-3.5-sonnet', -- your desired model (or use gpt-4o, etc.)
-        -- model = 'claude-3.7-sonnet', -- your desired model (or use gpt-4o, etc.)
-        -- model = 'gpt-4o', -- your desired model (or use gpt-4o, etc.)
-        proxy = nil, -- [protocol://]host[:port] Use this proxy
-        allow_insecure = false, -- Allow insecure server connections
-        timeout = 30000, -- Timeout in milliseconds
-        extra_request_body = {
-          temperature = 0,
-          max_tokens = 40480,
+      providers = {
+        copilot = {
+          endpoint = 'https://api.githubcopilot.com',
+          -- some of the available options 'gpt-4o', 'claude-3.7-sonnet', 'gpt-4.1'
+          model = 'claude-3.5-sonnet', -- your desired model (or use gpt-4o, etc.)
+          -- model = 'claude-3.7-sonnet', -- your desired model (or use gpt-4o, etc.)
+          -- model = 'gpt-4o', -- your desired model (or use gpt-4o, etc.)
+          proxy = nil, -- [protocol://]host[:port] Use this proxy
+          allow_insecure = false, -- Allow insecure server connections
+          timeout = 30000, -- Timeout in milliseconds
+          extra_request_body = {
+            temperature = 0,
+            max_tokens = 40480,
+          },
+        },
+        openai = {
+          endpoint = 'https://api.openai.com/v1',
+          model = 'gpt-4o', -- your desired model (or use gpt-4o, etc.)
+          timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
+          extra_request_body = {
+            temperature = 0,
+            max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
+          },
+          --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
         },
       },
-      openai = {
-        endpoint = 'https://api.openai.com/v1',
-        model = 'gpt-4o', -- your desired model (or use gpt-4o, etc.)
-        timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
-        extra_request_body = {
-          temperature = 0,
-          max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
-        },
-        --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
-      },
-
       mappings = {
         submit = {
           insert = '<C-e>',
         },
       },
+
       system_prompt = function()
         local hub = require('mcphub').get_hub_instance()
         return hub:get_active_servers_prompt()
