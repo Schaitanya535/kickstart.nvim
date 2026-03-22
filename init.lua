@@ -978,11 +978,19 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-moon', 'tokyonight-night', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-storm'
+      -- vim.cmd.colorscheme 'tokyonight-storm'
     end,
   },
 
   { 'catppuccin/nvim', name = 'catppuccin', priority = 1001 },
+
+  {
+    'oxfist/night-owl.nvim',
+    priority = 1002,
+    config = function()
+      vim.cmd.colorscheme 'night-owl'
+    end,
+  },
 
   -- TODO: comment
   -- Highlight todo, notes, etc in comments
