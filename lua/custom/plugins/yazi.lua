@@ -10,7 +10,7 @@ return {
   keys = {
     -- 👇 in this section, choose your own keymappings!
     {
-      '-',
+      '\\',
       mode = { 'n', 'v' },
       '<cmd>Yazi<cr>',
       desc = 'Open yazi at the current file',
@@ -19,7 +19,7 @@ return {
       -- Open in the current working directory
       '<leader>y',
       '<cmd>Yazi cwd<cr>',
-      desc = "Open the file manager in nvim's working directory",
+      desc = 'Open yazi in the current working directory',
     },
     {
       '<c-up>',
