@@ -3,7 +3,11 @@ return {
   ft = { 'csv', 'tsv' },
   opts = {},
   config = function()
-    require('csvview').setup()
+    require('csvview').setup {
+      view = {
+        display_mode = 'border',
+      },
+    }
     vim.api.nvim_create_autocmd('FileType', {
       pattern = { 'csv', 'tsv' },
       callback = function()
