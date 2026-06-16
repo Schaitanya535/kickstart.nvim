@@ -373,7 +373,8 @@ require('lazy').setup({
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
-    branch = '0.1.x',
+    -- branch = '0.1.x', -- stale; broke workspace_symbols on nvim 0.11 (util.lua:1804 nil index)
+    branch = 'master',
     dependencies = {
       'nvim-lua/plenary.nvim',
       { -- If encountering errors, see telescope-fzf-native README for installation instructions
@@ -747,6 +748,7 @@ require('lazy').setup({
         ts_ls = {},
         pyright = {},
         ruff = {},
+        zls = {}, -- Zig language server (see version note below)
         --
 
         lua_ls = {
@@ -836,6 +838,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        zig = { 'zigfmt' }, -- runs `zig fmt`
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -1014,7 +1017,7 @@ require('lazy').setup({
 
       require('nvim-treesitter.configs').setup {
         -- Add languages to be installed here that you want installed for treesitter
-        ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'sscript' },
+        ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'sscript', 'zig' },
 
         -- Autoinstall languages that are not installed.
         auto_install = true,
