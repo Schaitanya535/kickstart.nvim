@@ -211,12 +211,13 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
---  See `:help vim.highlight.on_yank()`
+--  See `:help vim.hl.on_yank()`
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
-    vim.highlight.on_yank()
+    -- vim.highlight renamed to vim.hl in 0.11 (deprecated alias removed in 0.12)
+    vim.hl.on_yank()
   end,
 })
 
@@ -618,17 +619,13 @@ require('lazy').setup({
           --  For example, in C this would take you to the header.
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
-          -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
+          -- On 0.11+ the method-style call is always valid; the version branch is dead.
           ---@param client vim.lsp.Client
           ---@param method vim.lsp.protocol.Method
           ---@param bufnr? integer some lsp support methods only in specific files
           ---@return boolean
           local function client_supports_method(client, method, bufnr)
-            if vim.fn.has 'nvim-0.11' == 1 then
-              return client:supports_method(method, bufnr)
-            else
-              return client.supports_method(method, { bufnr = bufnr })
-            end
+            return client:supports_method(method, bufnr)
           end
 
           -- The following two autocommands are used to highlight references of the
@@ -673,7 +670,7 @@ require('lazy').setup({
           -- Stop ts_ls if .deno folder is found
           if client and client.name == 'ts_ls' then
             local root_dir = vim.lsp.get_client_by_id(event.data.client_id).config.root_dir
-            if vim.loop.fs_stat(root_dir .. '/.deno') then
+            if vim.uv.fs_stat(root_dir .. '/.deno') then
               vim.lsp.stop_client { event.data.client_id }
             end
           end
@@ -682,7 +679,7 @@ require('lazy').setup({
 
           if client and client.name == 'denols' then
             local root_dir = vim.lsp.get_client_by_id(event.data.client_id).config.root_dir
-            if not (vim.loop.fs_stat(root_dir .. '/.deno')) then
+            if not (vim.uv.fs_stat(root_dir .. '/.deno')) then
               vim.lsp.stop_client { event.data.client_id }
             end
           end
@@ -787,20 +784,22 @@ require('lazy').setup({
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-      require('mason-lspconfig').setup {
-        ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
-        automatic_installation = false,
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for ts_ls)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
-      }
+      -- 0.11+ native LSP API. nvim-lspconfig ships each server's base config in its
+      -- runtime `lsp/<name>.lua`; the calls below layer our overrides on top.
+      --   vim.lsp.config('*', ...)   -> defaults merged into every server
+      --   vim.lsp.config(name, ...)  -> per-server overrides (settings, cmd, etc.)
+      --   vim.lsp.enable(names)       -> registers FileType autocmds to auto-start them
+      vim.lsp.config('*', { capabilities = capabilities })
+
+      for server_name, server in pairs(servers) do
+        vim.lsp.config(server_name, server)
+      end
+
+      vim.lsp.enable(vim.tbl_keys(servers))
+
+      -- No mason-lspconfig.setup() needed — vim.lsp.enable() above does the enabling.
+      -- mason-lspconfig stays a dependency only for its mason <-> lspconfig name mapping
+      -- (used by mason-tool-installer); matches latest kickstart.
     end,
   },
 
