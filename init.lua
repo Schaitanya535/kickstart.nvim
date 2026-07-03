@@ -1003,8 +1003,14 @@ require('lazy').setup({
 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    -- NOTE: migrated master -> main branch. master is EOL and its highlighter
+    -- crashes on nvim 0.12 (node:range nil). main has a new API (no configs
+    -- module, no ensure_installed/highlight.enable; highlight via vim.treesitter.start).
+    branch = 'main',
+    lazy = false,
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
+    -- OLD (master API), kept for reference:
+    -- main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 
     config = function()
@@ -1014,41 +1020,60 @@ require('lazy').setup({
         },
       }
 
-      require('nvim-treesitter.configs').setup {
-        -- Add languages to be installed here that you want installed for treesitter
-        ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'sscript', 'zig' },
+      require('nvim-treesitter').setup {}
 
-        -- Autoinstall languages that are not installed.
-        auto_install = true,
-
-        highlight = {
-          enable = true,
-          additional_vim_regex_highlighting = { 'ruby' },
-        },
-        indent = {
-          enable = true,
-          disable = { 'ruby' },
-        },
+      -- Install parsers (main branch: async install(), replaces ensure_installed)
+      -- main branch has no auto_install: markdown code-fence injections (json, js,
+      -- python, etc.) must be pre-installed or they won't highlight.
+      local ensure = {
+        'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'zig',
+        -- code-fence / common langs
+        'json', 'yaml', 'toml', 'javascript', 'typescript', 'tsx', 'python', 'rust', 'css',
       }
+      pcall(function()
+        require('nvim-treesitter').install(ensure)
+      end)
 
-      -- -- strating treesitter
-      local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
-      parser_config.sscript = {
-        install_info = {
-          url = '~/Projects/tree-sitter-sscript',
-          files = { 'src/parser.c' },
-        },
-        fileType = 'sscript',
-        used_by = { 'sscript' },
-      }
+      -- Enable highlighting + treesitter indent per buffer (main branch:
+      -- highlight.enable is gone, use vim.treesitter.start on FileType).
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function(args)
+          local ft = args.match
+          -- ruby: keep vim regex highlighting, skip ts indent (was disabled before)
+          if ft == 'ruby' then
+            return
+          end
+          local ok = pcall(vim.treesitter.start, args.buf)
+          if ok then
+            vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
+        end,
+      })
 
+      -- Custom sscript parser (main branch parser registration). Wrapped in
+      -- pcall so a missing grammar/path never blocks startup.
+      pcall(function()
+        require('nvim-treesitter.parsers').sscript = {
+          install_info = {
+            url = '~/Projects/tree-sitter-sscript',
+            files = { 'src/parser.c' },
+          },
+        }
+        vim.treesitter.language.register('sscript', 'sscript')
+      end)
+
+      -- OLD (master API), kept for reference:
+      -- require('nvim-treesitter.configs').setup {
+      --   ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'sscript', 'zig' },
+      --   auto_install = true,
+      --   highlight = { enable = true, additional_vim_regex_highlighting = { 'ruby' } },
+      --   indent = { enable = true, disable = { 'ruby' } },
+      -- }
       -- local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
       -- parser_config.sscript = {
-      --   install_info = {
-      --     url = '~/Projects/tree-sitter-sscript/', -- Replace with the path to your grammar files
-      --     files = { 'src/parser.c' }, -- Adjust based on your grammar files
-      --   },
-      --   filetype = 'sscript', -- Set the filetype associated with your grammar
+      --   install_info = { url = '~/Projects/tree-sitter-sscript', files = { 'src/parser.c' } },
+      --   fileType = 'sscript',
+      --   used_by = { 'sscript' },
       -- }
     end,
     -- Add parser for your custom language
@@ -1140,7 +1165,9 @@ vim.keymap.set('n', '<leader>bh', '<cmd>BufferLineMovePrev<CR>', { desc = 'Move 
 vim.keymap.set('n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>', { desc = 'Code action' })
 
 vim.opt.foldmethod = 'expr' -- Use 'expr' for Treesitter-based folds or other expressions
-vim.opt.foldexpr = 'nvim_treesitter#foldexpr()' -- Treesitter folding expression
+-- main branch: use builtin vim.treesitter.foldexpr (old master fn nvim_treesitter#foldexpr removed)
+vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Treesitter folding expression
+-- OLD (master): vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.opt.foldenable = true -- Enable folding by default
 vim.opt.foldlevel = 99 -- Open most folds by default (set to 0 to close all folds)
 vim.opt.foldlevelstart = 99 -- Start with all folds open

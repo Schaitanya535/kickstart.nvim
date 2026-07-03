@@ -5,9 +5,16 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       local lint = require 'lint'
+      -- Markdown linting disabled entirely — markdownlint (MD013/MD032/etc.) too
+      -- noisy on notes/JSON-heavy files. Re-enable by uncommenting below.
       lint.linters_by_ft = {
-        markdown = { 'markdownlint' },
+        -- markdown = { 'markdownlint' },
       }
+
+      -- To silence only specific rules instead of killing markdown lint:
+      -- lint.linters_by_ft = { markdown = { 'markdownlint' } }
+      -- local md = lint.linters.markdownlint
+      -- md.args = vim.list_extend({ '--disable', 'MD013', 'MD033', 'MD041' }, md.args or {})
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,
       -- instead set linters_by_ft like this:
