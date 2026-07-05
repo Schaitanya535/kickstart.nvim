@@ -1034,6 +1034,11 @@ require('lazy').setup({
         require('nvim-treesitter').install(ensure)
       end)
 
+      -- No `jsonl` grammar exists; JSON Lines is JSON per line. Map the jsonl
+      -- filetype to the json parser so vim.treesitter.start uses it (kills the
+      -- "skipping unsupported language: jsonl" warning).
+      vim.treesitter.language.register('json', 'jsonl')
+
       -- Enable highlighting + treesitter indent per buffer (main branch:
       -- highlight.enable is gone, use vim.treesitter.start on FileType).
       vim.api.nvim_create_autocmd('FileType', {
