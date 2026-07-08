@@ -441,7 +441,39 @@ require('lazy').setup({
             },
           },
         }, ]]
-        -- pickers = {}
+        -- Match my shell fd/fzf search: include .env/.specs + source, drop the
+        -- noise. Telescope spawns rg/fd directly (ignores shell env & aliases),
+        -- so the flags are set here. fd auto-reads ~/.config/fd/ignore; rg does
+        -- not, so it's pointed at the same file via --ignore-file.
+        defaults = {
+          vimgrep_arguments = {
+            'rg',
+            '--color=never',
+            '--no-heading',
+            '--with-filename',
+            '--line-number',
+            '--column',
+            '--smart-case',
+            '--hidden',
+            '--no-ignore-vcs',
+            '--ignore-file',
+            vim.fn.expand '~/.config/fd/ignore',
+          },
+        },
+        pickers = {
+          find_files = {
+            find_command = {
+              'fd',
+              '--type',
+              'f',
+              '--color',
+              'never',
+              '--hidden',
+              '--no-ignore-vcs',
+              '--strip-cwd-prefix',
+            },
+          },
+        },
         mappings = {
           i = {
             ['<esc>'] = require('telescope.actions').close,
