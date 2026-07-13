@@ -1137,6 +1137,34 @@ require('lazy').setup({
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
 
+  { -- Leptos: parse `view!`/`html!`/`template!` RSX properly.
+    -- `rust_with_rstml` is a superset of tree-sitter-rust that parses the RSX
+    -- inside Leptos macros natively (0 parse errors). An `html` injection is the
+    -- wrong grammar: it chokes on <For>, `key=|id|` closures, `{expr}` blocks and
+    -- <Component/> tags, cascading errors. Same grammar Zed's Leptos extension uses.
+    'rayliwell/tree-sitter-rstml',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    -- Load eagerly (not `ft`-lazy): the plugin ships the rust_with_rstml queries
+    -- and must map rust->rust_with_rstml BEFORE the first Rust buffer's FileType
+    -- autocmd runs vim.treesitter.start, else that buffer parses as plain rust.
+    lazy = false,
+    config = function()
+      -- The plugin's own init() (auto-run from its plugin/*.vim) registers the
+      -- parser on the `User TSUpdate` event, which is required on nvim-treesitter's
+      -- `main` branch: install() reloads the parsers module and wipes any direct
+      -- assignment, then re-fires TSUpdate. setup() maps the rust filetype to the
+      -- augmented grammar (its highlights are a full rust superset, so plain Rust
+      -- is unaffected).
+      require('tree-sitter-rstml').setup()
+      -- Compile the parser on first run (main branch: no :TSInstall auto-hook).
+      if #vim.api.nvim_get_runtime_file('parser/rust_with_rstml.so', false) == 0 then
+        pcall(function()
+          require('nvim-treesitter').install { 'rust_with_rstml' }
+        end)
+      end
+    end,
+  },
+
   --
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
