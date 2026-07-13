@@ -767,7 +767,22 @@ require('lazy').setup({
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
-        -- rust_analyzer = {},
+        rust_analyzer = {
+          -- Use rustup's rust-analyzer, NOT mason's prebuilt. Mason's binary is
+          -- built against a different rustc than the active toolchain, so its
+          -- proc-macro server ABI mismatches -> derives panic with
+          -- "failed to write request: The length of a sequence must be known".
+          cmd = { vim.fn.expand '$HOME/.cargo/bin/rust-analyzer' },
+          settings = {
+            ['rust-analyzer'] = {
+              -- NOTE: Leptos `ssr`/`hydrate` are mutually exclusive, so do NOT
+              -- set cargo.allFeatures (enabling both breaks the build). Cfg
+              -- dimming of the inactive half is expected.
+              procMacro = { enable = true },
+              check = { command = 'check' },
+            },
+          },
+        },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
