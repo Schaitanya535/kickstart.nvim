@@ -715,6 +715,17 @@ require('lazy').setup({
               vim.lsp.stop_client { event.data.client_id }
             end
           end
+
+          -- rust-analyzer: disable LSP semantic tokens. RA sees the `view!` macro
+          -- body as an opaque Rust token tree and re-colors the RSX (tags, attrs)
+          -- as plain Rust once indexing finishes -- semantic tokens (priority 125)
+          -- override tree-sitter (100), clobbering the rust_with_rstml highlighting.
+          -- Killing them hands highlighting fully to tree-sitter, which is correct
+          -- for both RSX and plain Rust. This is why it "loads right, then breaks".
+          if client and client.name == 'rust_analyzer' then
+            client.server_capabilities.semanticTokensProvider = nil
+            pcall(vim.lsp.semantic_tokens.stop, event.buf, client.id)
+          end
         end,
       })
 
