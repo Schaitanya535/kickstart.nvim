@@ -22,6 +22,9 @@ return {
         path = '~/Documents/Second Brain/',
       },
     },
+    -- Let render-markdown.nvim own the in-buffer rendering; obsidian's built-in
+    -- ui overlaps and causes double concealing/rendering.
+    ui = { enable = false },
   },
   notes_subdir = 'notes',
 
