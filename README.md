@@ -23,15 +23,22 @@ If you are experiencing issues, please make sure you have the latest versions.
 
 External Requirements:
 - Basic utils: `git`, `make`, `unzip`, C Compiler (`gcc`)
-- [ripgrep](https://github.com/BurntSushi/ripgrep#installation)
+- [ripgrep](https://github.com/BurntSushi/ripgrep#installation) and [fd-find](https://github.com/sharkdp/fd#installation) — Telescope grep/find
+- `node` (+ `npm`) — required for the Mason-installed LSPs to work (`ts_ls`, `pyright`)
+- [yazi](https://yazi-rs.github.io/docs/installation) — file manager, used via `yazi.nvim` (replaces netrw)
+- [lazygit](https://github.com/jesseduffield/lazygit#installation) — git UI opened in a floating terminal
 - Clipboard tool (xclip/xsel/win32yank or other depending on the platform)
 - A [Nerd Font](https://www.nerdfonts.com/): optional, provides various icons
   - if you have it set `vim.g.have_nerd_font` in `init.lua` to true
 - Emoji fonts (Ubuntu only, and only if you want emoji!) `sudo apt install fonts-noto-color-emoji`
 - Language Setup:
-  - If you want to write Typescript, you need `npm`
+  - TypeScript/JavaScript (`ts_ls`) and Python (`pyright`) LSPs need `node`
+  - Rust: `rustup` toolchain — `rust_analyzer` runs from `~/.cargo/bin`, and Leptos/rstml highlighting needs `cargo`
   - If you want to write Golang, you will need `go`
   - etc.
+- `herdr` — terminal multiplexer; `after/plugin/herdr_nav.lua` gives seamless `<C-hjkl>` navigation between Neovim splits and herdr panes (`tmux` works as a fallback if you're inside tmux instead)
+
+Run `:checkhealth kickstart` to verify the core executables (`git`, `make`, `unzip`, `rg`, `fd`, `node`, `yazi`, `lazygit`) are found.
 
 > **NOTE**
 > See [Install Recipes](#Install-Recipes) for additional Windows and Linux specific notes

@@ -20,8 +20,12 @@ local check_version = function()
 end
 
 local check_external_reqs = function()
-  -- Basic utils: `git`, `make`, `unzip`
-  for _, exe in ipairs { 'git', 'make', 'unzip', 'rg' } do
+  -- Basic utils + this config's external requirements:
+  --   fd    -> Telescope find_files
+  --   node  -> Mason-installed LSPs ts_ls / pyright
+  --   yazi  -> yazi.nvim file manager
+  --   lazygit -> floating-terminal git (terminal.lua)
+  for _, exe in ipairs { 'git', 'make', 'unzip', 'rg', 'fd', 'node', 'yazi', 'lazygit' } do
     local is_executable = vim.fn.executable(exe) == 1
     if is_executable then
       vim.health.ok(string.format("Found executable: '%s'", exe))
